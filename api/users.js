@@ -1,7 +1,7 @@
 const { Router } = require('express')
 const { ValidationError } = require('sequelize')
 
-const { User, UserClientFields } = require('../models/user')
+const { User, UserClientFields, getUserByID, validateUser } = require('../models/user')
 
 const router = Router()
 
@@ -58,7 +58,30 @@ router.post('/', async (req, res) => {
  * Route to login a reqistered user
  */
 router.post('/login', async (req, res) => {
-  
+  if (req.body && req.body.email && req.body.password) {
+    try {
+      const authenticated =
+        await validateUser(req.body.email, req.body.password);
+      if (authenticated) {
+        const token = generateAuthToken(req.body.userId);
+        res.status(200).send({
+          token: token
+        });
+      } else {
+        res.status(401).send({
+          error: "Invalid authentication credentials"
+        });
+      }
+    } catch (err) {
+      res.status(500).send({
+        error: "Error logging in. Try again later."
+      });
+    }
+  } else {
+    res.status(400).send({
+      error: "Request body was invalid."
+    });
+  }
 });
 
 module.exports = router
