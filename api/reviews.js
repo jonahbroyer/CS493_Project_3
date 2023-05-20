@@ -1,6 +1,7 @@
 const { Router } = require('express')
 const { ValidationError } = require('sequelize')
 
+const { requireAuthentication } = require('../lib/auth')
 const { Review, ReviewClientFields } = require('../models/review')
 
 const router = Router()
@@ -8,7 +9,7 @@ const router = Router()
 /*
  * Route to create a new review.
  */
-router.post('/', async function (req, res, next) {
+router.post('/', requireAuthentication, async function (req, res, next) {
   try {
     const review = await Review.create(req.body, ReviewClientFields)
     res.status(201).send({ id: review.id })
