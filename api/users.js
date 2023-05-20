@@ -1,9 +1,8 @@
 const { Router } = require('express')
 const { ValidationError } = require('sequelize')
 
-const { User, UserClientFields, getUserByID, validateUser } = require('../models/user')
-
 const { generateAuthToken, requireAuthentication } = require('../lib/auth')
+const { User, UserClientFields, getUserByID, validateUser } = require('../models/user')
 
 const router = Router()
 
