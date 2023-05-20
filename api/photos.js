@@ -66,13 +66,19 @@ router.patch('/:photoId', requireAuthentication, async function (req, res, next)
 /*
  * Route to delete a photo.
  */
-router.delete('/:photoId', async function (req, res, next) {
+router.delete('/:photoId', requireAuthentication, async function (req, res, next) {
   const photoId = req.params.photoId
   const result = await Photo.destroy({ where: { id: photoId }})
-  if (result > 0) {
-    res.status(204).send()
+  if (req.user !== req.params.userId) {
+    res.status(403).json({
+      error: "Unauthorized to access the specified resource"
+    });
   } else {
-    next()
+    if (result > 0) {
+      res.status(204).send()
+    } else {
+      next()
+    }
   }
 })
 
