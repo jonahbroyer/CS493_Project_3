@@ -41,7 +41,7 @@ router.get('/:userId/photos', async function (req, res) {
 /*
  * Route to create a new user.
  */
-router.post('/', async function (req, res, next) {
+router.post('/', async (req, res) => {
   try {
     const user = await User.create(req.body, UserClientFields)
     res.status(201).send({ id: user.id })
@@ -53,5 +53,12 @@ router.post('/', async function (req, res, next) {
     }
   }
 })
+
+/*
+ * Route to login a reqistered user
+ */
+router.post('/login', async (req, res) => {
+  
+});
 
 module.exports = router
