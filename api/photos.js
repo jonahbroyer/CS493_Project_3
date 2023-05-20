@@ -1,6 +1,7 @@
 const { Router } = require('express')
 const { ValidationError } = require('sequelize')
 
+const { requireAuthentication } = require('../lib/auth')
 const { Photo, PhotoClientFields } = require('../models/photo')
 
 const router = Router()
@@ -8,7 +9,7 @@ const router = Router()
 /*
  * Route to create a new photo.
  */
-router.post('/', async function (req, res, next) {
+router.post('/', requireAuthentication, async function (req, res, next) {
   try {
     const photo = await Photo.create(req.body, PhotoClientFields)
     res.status(201).send({ id: photo.id })
