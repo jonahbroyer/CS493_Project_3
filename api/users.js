@@ -83,7 +83,7 @@ router.post('/login', async (req, res) => {
         });
       } else {
         res.status(401).send({
-          error: "Invalid authentication credentials"
+          error: "Invalid authentication credentials."
         });
       }
     } catch (err) {
