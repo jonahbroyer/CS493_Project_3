@@ -10,7 +10,7 @@ const router = Router()
 /*
  * Route to list all of a user's businesses.
  */
-router.get('/:userId/businesses', async function (req, res) {
+router.get('/:userId/businesses', requireAuthentication, async function (req, res) {
   const userId = req.params.userId
   const userBusinesses = await Business.findAll({ where: { ownerId: userId }})
   res.status(200).json({
@@ -21,7 +21,7 @@ router.get('/:userId/businesses', async function (req, res) {
 /*
  * Route to list all of a user's reviews.
  */
-router.get('/:userId/reviews', async function (req, res) {
+router.get('/:userId/reviews', requireAuthentication, async function (req, res) {
   const userId = req.params.userId
   const userReviews = await Review.findAll({ where: { userId: userId }})
   res.status(200).json({
@@ -32,7 +32,7 @@ router.get('/:userId/reviews', async function (req, res) {
 /*
  * Route to list all of a user's photos.
  */
-router.get('/:userId/photos', async function (req, res) {
+router.get('/:userId/photos', requireAuthentication, async function (req, res) {
   const userId = req.params.userId
   const userPhotos = await Photo.findAll({ where: { userId: userId }})
   res.status(200).json({
@@ -44,7 +44,7 @@ router.get('/:userId/photos', async function (req, res) {
  * Route to fetch info about a specific user.
  * https://stackoverflow.com/questions/27972271/sequelize-dont-return-password
  */
-router.get('/:userId', async function (req, res, next) {
+router.get('/:userId', requireAuthentication, async function (req, res, next) {
   const userId = req.params.userId
   const user = await User.scope('withoutPassword').findAll()
   if (user) {
