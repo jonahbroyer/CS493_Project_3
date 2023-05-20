@@ -38,7 +38,7 @@ router.get('/:reviewId', async function (req, res, next) {
 /*
  * Route to update a review.
  */
-router.patch('/:reviewId', async function (req, res, next) {
+router.patch('/:reviewId', requireAuthentication, async function (req, res, next) {
   const reviewId = req.params.reviewId
 
   /*
@@ -50,10 +50,16 @@ router.patch('/:reviewId', async function (req, res, next) {
       field => field !== 'businessId' && field !== 'userId'
     )
   })
-  if (result[0] > 0) {
-    res.status(204).send()
+  if (req.user !== req.params.userId) {
+    res.status(403).json({
+      error: "Unauthorized to access the specified resource"
+    });
   } else {
-    next()
+    if (result[0] > 0) {
+      res.status(204).send()
+    } else {
+      next()
+    }
   }
 })
 
