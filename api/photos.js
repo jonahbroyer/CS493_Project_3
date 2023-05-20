@@ -38,7 +38,7 @@ router.get('/:photoId', async function (req, res, next) {
 /*
  * Route to update a photo.
  */
-router.patch('/:photoId', async function (req, res, next) {
+router.patch('/:photoId', requireAuthentication, async function (req, res, next) {
   const photoId = req.params.photoId
 
   /*
@@ -50,10 +50,16 @@ router.patch('/:photoId', async function (req, res, next) {
       field => field !== 'businessId' && field !== 'userId'
     )
   })
-  if (result[0] > 0) {
-    res.status(204).send()
+  if (req.user !== req.params.userId) {
+    res.status(403).json({
+      error: "Unauthorized to access the specified resource"
+    });
   } else {
-    next()
+    if (result[0] > 0) {
+      res.status(204).send()
+    } else {
+      next()
+    }
   }
 })
 
