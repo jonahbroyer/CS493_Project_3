@@ -39,6 +39,20 @@ router.get('/:userId/photos', async function (req, res) {
 })
 
 /*
+ * Route to fetch info about a specific user.
+ * https://stackoverflow.com/questions/27972271/sequelize-dont-return-password
+ */
+router.get('/:userId', async function (req, res, next) {
+  const userId = req.params.userId
+  const user = await User.scope('withoutPassword').findAll()
+  if (user) {
+    res.status(200).send(user)
+  } else {
+    next()
+  }
+})
+
+/*
  * Route to create a new user.
  */
 router.post('/', async (req, res) => {

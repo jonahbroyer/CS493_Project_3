@@ -16,6 +16,11 @@ const User = sequelize.define('user', {
       const passwordHash = await bcrypt.hash(User.password, 8);
       this.setDataValue('password', hash(value));
     }
+  },
+  scopes: {
+    withoutPassword: {
+      attributes: { exclude: ['[password'] },
+    }
   }
 });
 
