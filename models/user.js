@@ -28,3 +28,14 @@ exports.UserClientFields = [
   'admin',
   'businessId'
 ]
+
+async function getUserByID(userID, includePassword) {
+  const projection = includePassword ? {} : { password: 0};
+}
+
+async function validateUser(id, password) {
+  const user = await getUserByID(id, true);
+  const authenticated = user &&
+    await bcrypt.compare(password, user.password);
+  return authenticated;
+}

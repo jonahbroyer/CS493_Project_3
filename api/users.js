@@ -54,10 +54,6 @@ router.post('/', async (req, res) => {
   }
 })
 
-async function getUserByID(userID, includePassword) {
-  const projection = includePassword ? {} : { password: 0};
-}
-
 /*
  * Route to login a reqistered user
  */
