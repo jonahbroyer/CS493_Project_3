@@ -109,13 +109,19 @@ router.patch('/:businessId', requireAuthentication, async function (req, res, ne
 /*
  * Route to delete a business.
  */
-router.delete('/:businessId', async function (req, res, next) {
+router.delete('/:businessId', requireAuthentication, async function (req, res, next) {
   const businessId = req.params.businessId
   const result = await Business.destroy({ where: { id: businessId }})
-  if (result > 0) {
-    res.status(204).send()
+  if (req.user !== req.params.userId) {
+    res.status(403).json({
+      error: "Unauthorized to access the specified resource"
+    });
   } else {
-    next()
+    if (result > 0) {
+      res.status(204).send()
+    } else {
+      next()
+    }
   }
 })
 
