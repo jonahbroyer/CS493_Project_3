@@ -66,13 +66,19 @@ router.patch('/:reviewId', requireAuthentication, async function (req, res, next
 /*
  * Route to delete a review.
  */
-router.delete('/:reviewId', async function (req, res, next) {
+router.delete('/:reviewId', requireAuthentication, async function (req, res, next) {
   const reviewId = req.params.reviewId
   const result = await Review.destroy({ where: { id: reviewId }})
-  if (result > 0) {
-    res.status(204).send()
+  if (req.user !== req.params.userId) {
+    res.status(403).json({
+      error: "Unauthorized to access the specified resource"
+    });
   } else {
-    next()
+    if (result > 0) {
+      res.status(204).send()
+    } else {
+      next()
+    }
   }
 })
 
